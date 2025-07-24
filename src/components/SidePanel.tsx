@@ -5,8 +5,9 @@ import { useRegexContext } from '@/context/RegexContext';
 
 export default function SidePanel() {
 
-    const {regexPatterns, setRegexPatterns, regexInputValue, setRegexInputValue, addRegex, deleteRegex} = useRegexContext()
-
+    const {regexPatterns, setRegexPatterns, regexInputValue, setRegexInputValue, addRegex, deleteRegex, editRegex} = useRegexContext()
+    const [editing, setEditing] = useState<number | null>(null)
+    const [newPattern, setNewPattern] = useState('')
 
     /* Initialize the local storage patterns */
     useEffect(() => {
@@ -33,8 +34,17 @@ export default function SidePanel() {
                 <h1>Current strings</h1>
                 <ul>
                     {regexPatterns.map((e, i) => (
-                        <li key={i}>{e.pattern} : {e.approved ? 'approved' : 'not approved'} 
-                        <button onClick={() => deleteRegex(i)}>Delete</button>
+                        <li key={i}>
+                            {
+                                editing === i ? <input value={newPattern} onChange={e => setNewPattern(e.target.value)}></input> :
+                                <div>{e.pattern}</div>
+                            } &gt; {e.approved ? 'approved' : 'not approved'} 
+                            <button onClick={() => deleteRegex(i)}>Delete</button>
+                            
+                            {editing !== i ? 
+                            <button onClick={() => {setEditing(i); setNewPattern(e.pattern)}}>edit</button> : 
+                            <button onClick={() => {setEditing(null); editRegex(i, newPattern)}}>save</button>}
+
                         </li>
                     ))}
                 </ul>
