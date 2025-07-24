@@ -3,6 +3,7 @@
 import styles from '@/styles/mainSection.module.css'
 import { LoremIpsum } from "lorem-ipsum";
 import React, { useState } from 'react';
+import { useRegexContext } from '@/context/RegexContext';
 
 
 const lorem = new LoremIpsum({
@@ -18,10 +19,10 @@ const lorem = new LoremIpsum({
 
 export default function MainSection() {
 
-    const [currentText, setCurrentText] = useState<string>(lorem.generateParagraphs(7))
+    const {userText, setUserText} = useRegexContext()
 
     const inputOnChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-        setCurrentText(e.target.value);
+        setUserText(e.target.value);
     };
 
     return (
@@ -29,9 +30,9 @@ export default function MainSection() {
             <textarea
                 className={styles['your-textarea-class']}
                 onChange={inputOnChange}
-                value={currentText}/>
+                value={userText}/>
                 
-            <button onClick={() => setCurrentText(lorem.generateParagraphs(7))}>Generate Text</button>
+            <button onClick={() => setUserText(lorem.generateParagraphs(7))}>Generate Text</button>
         </div>
     )
 }

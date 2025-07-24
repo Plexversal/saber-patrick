@@ -1,12 +1,11 @@
 'use client'
 
 import React, { useState, useEffect } from 'react';
-
+import { useRegexContext } from '@/context/RegexContext';
 
 export default function SidePanel() {
 
-    const [regexPatterns, setRegexPatterns] = useState<string[]>([])
-    const [inputValue, setInputValue] = useState('')
+    const {regexPatterns, setRegexPatterns, regexInputValue, setRegexInputValue, addRegex} = useRegexContext()
 
 
     /* Initialize the local storage patterns */
@@ -18,22 +17,8 @@ export default function SidePanel() {
     }, []);
 
 
-    function addRegex(e: React.FormEvent<HTMLFormElement>) {
-        e.preventDefault()
-
-        if(!inputValue) return
-
-        const updatedPatterns = [...regexPatterns, inputValue];
-
-        setRegexPatterns(updatedPatterns)
-        setInputValue('')
-        
-        localStorage.setItem('regexPatterns', JSON.stringify(updatedPatterns))
-    }
-
-
     function onChange(e: React.ChangeEvent<HTMLInputElement>) {
-        setInputValue(e.target.value)
+        setRegexInputValue(e.target.value)
     }
     return (
         <div>
@@ -43,7 +28,7 @@ export default function SidePanel() {
                 <p>edit mode</p>
                 <form onSubmit={(e) => addRegex(e)}>
                     <button type='submit'>Add Pattern</button>
-                    <input onChange={e => onChange(e)} type='text' placeholder='type your pattern'></input>
+                    <input value={regexInputValue} onChange={e => onChange(e)} type='text' placeholder='type your pattern'></input>
                 </form>
                 <h1>Current strings</h1>
                 <ul>
