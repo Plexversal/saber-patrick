@@ -1,6 +1,6 @@
 'use client'
 
-import React, { createContext, useContext, useEffect, useState, ReactNode, SetStateAction, Dispatch } from 'react';
+import React, { createContext, useContext, useEffect, useState, ReactNode, SetStateAction, Dispatch, useRef } from 'react';
 import { LoremIpsum } from 'lorem-ipsum';
 
 
@@ -20,6 +20,9 @@ export interface IRegexContext {
     deleteRegex: (index: number) => void;
     editRegex: (index: number, pattern: string) => void;
     approveRegex: (index: number, approvalStatus: boolean) => void;
+    workerMatches: string[];
+    setWorkerMatches: Dispatch<SetStateAction<string[]>>;
+    runExtraction: (pattern: string, text: string) => void
 }
 
 interface IRegexEntry {
@@ -32,14 +35,36 @@ export function RegexProvider({children}: {children: ReactNode}) {
     const [regexPatterns, setRegexPatterns] = useState<IRegexEntry[]>([])
     const [userText, setUserText] = useState<string>(lorem.generateParagraphs(7))
     const [regexInputValue, setRegexInputValue] = useState('')
+    const [workerMatches, setWorkerMatches] = useState<string[]>([]);
+    const workerRef = useRef<Worker | null>(null);
 
-
-    /* Initialize the local storage patterns */
+    /* Initialize the local storage patterns and worker */
     useEffect(() => {
         let regexPatterns = localStorage.getItem("regexPatterns")
         if (regexPatterns) {
-            return setRegexPatterns(JSON.parse(regexPatterns))
+            setRegexPatterns(JSON.parse(regexPatterns))
         }
+        const worker = new Worker(
+            new URL('@/workers/regexExtraction.worker.ts', import.meta.url),
+            { type: 'module' }
+        );
+        workerRef.current = worker;
+        
+        worker.onmessage = (event) => {
+            const { matches, error } = event.data;
+            if (error) {
+                console.error(error);
+                setWorkerMatches([]);
+            } else {
+                console.log('Matches:', matches);
+                setWorkerMatches(matches)
+            }
+        };
+        return () => {
+            worker.terminate();
+            workerRef.current = null;
+        };
+
     }, []);
 
     function addRegex(e: React.FormEvent<HTMLFormElement>) {
@@ -93,6 +118,12 @@ export function RegexProvider({children}: {children: ReactNode}) {
         localStorage.setItem('regexPatterns', JSON.stringify(updatedPatterns));
     }
 
+    function runExtraction(pattern: string, text: string) {
+        if (workerRef.current) {
+            workerRef.current.postMessage({ pattern, text });
+        }
+    }
+
     return (<RegexContext.Provider
     value={{
         regexPatterns,
@@ -104,7 +135,10 @@ export function RegexProvider({children}: {children: ReactNode}) {
         addRegex,
         deleteRegex,
         editRegex,
-        approveRegex
+        approveRegex,
+        workerMatches,
+        setWorkerMatches,
+        runExtraction
     }}>
         {children}
     </RegexContext.Provider>)

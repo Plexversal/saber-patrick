@@ -6,7 +6,7 @@ import { FaCircleCheck, FaCircleXmark  } from "react-icons/fa6";
 
 export default function SidePanel() {
 
-    const {regexPatterns, setRegexPatterns, regexInputValue, setRegexInputValue, addRegex, deleteRegex, editRegex, approveRegex} = useRegexContext()
+    const {regexPatterns, setRegexPatterns, regexInputValue, setRegexInputValue, addRegex, deleteRegex, editRegex, approveRegex, runExtraction, workerMatches, userText} = useRegexContext()
     const [editing, setEditing] = useState<number | null>(null)
     const [newPattern, setNewPattern] = useState<string>('')
     const [approveModeChosen, setApproveModeChosen] = useState<boolean>(true)
@@ -23,6 +23,10 @@ export default function SidePanel() {
     function onChange(e: React.ChangeEvent<HTMLInputElement>) {
         setRegexInputValue(e.target.value)
     }
+
+    useEffect(() => {
+        console.log(workerMatches)
+    }, [workerMatches])
 
     return (
         <div>
@@ -61,6 +65,8 @@ export default function SidePanel() {
                                 </div>
 
                                 )}
+                                <h3>extract</h3>
+                                <button onClick={() => runExtraction(regexPatterns[approvalSelectedPattern].pattern, userText)}>extract</button>
                             </div>
                             )}                            
                     </div> : 
