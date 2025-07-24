@@ -1,6 +1,8 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
-## Getting Started
+(Uses latest Next.JS 15)
+
+## Setup
 
 First, run the development server:
 
@@ -16,21 +18,44 @@ bun dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+All routes in (routes) folder and index route is page.tsx at route of said folder.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Notes
 
-## Learn More
+The Applications purpose is to analyse user input with user defined regex expressions, users should be able to:
+* Input data in a textarea
+* Add and save regular expressions
+* Display extracted data with selected regex pattern
+* Modify existing patterns and save
+* App is a single page web application dashboard split into 2 sections
 
-To learn more about Next.js, take a look at the following resources:
+### Considerations
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+**Computation**
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+The bulk of computation is going to be the regex matching, so it must be considered where this computation should take place.
 
-## Deploy on Vercel
+If user enters large text or abnormal regex pattern, browser can hang and get the classic "aw snap" issue.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+There are 3 approaches that can be used for this type of computation:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+1) Everything computed client-side in real time. (Simplist approach)
+2) Everything computed server-side using Next server route. (Would require heavy validation to protect API route and server)
+3) Everything computed in a worker agent, this worker can offload the computation to another thread on the cpu and so allow the app to not be slowed down.
+
+After consideration, the app should use option 3 in this scenario.
+
+**Storage**
+
+Other limitations include local-storage limits so this needs to be handled if this max limit is reached, ideally db is used, but not required in this app.
+
+
+**State**
+
+Requirements of the app is that the states react to each other from the main section and the side bar components. (e.g. if text changes, matches change)
+
+Simplist approach would be to store the state in parent container and then lift the state up from the components.
+
+But for this example, I will use a **context provider**, just for demonstration purposes of react/next state management.
+
+Third-party state management like Redux would be overkill, so not used here.
