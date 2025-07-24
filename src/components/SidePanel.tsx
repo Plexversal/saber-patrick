@@ -33,7 +33,7 @@ export default function SidePanel() {
                 <h1>Current strings</h1>
                 <ul>
                     {regexPatterns.map((e, i) => (
-                        <li key={i}>{e}</li>
+                        <li key={i}>{e.pattern} : {e.approved ? 'approved' : 'not approved'}</li>
                     ))}
                 </ul>
             </div>

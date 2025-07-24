@@ -10,18 +10,23 @@ const lorem = new LoremIpsum({
 });
 
 export interface IRegexContext {
-    regexPatterns: string[];
-    setRegexPatterns: Dispatch<SetStateAction<string[]>>;
+    regexPatterns: IRegexEntry[];
+    setRegexPatterns: Dispatch<SetStateAction<IRegexEntry[]>>;
     userText: string;
     setUserText: Dispatch<SetStateAction<string>>;
     regexInputValue: string;
     setRegexInputValue: Dispatch<SetStateAction<string>>;
     addRegex: (e: React.FormEvent<HTMLFormElement>) => void
 }
+
+interface IRegexEntry {
+    pattern: string;
+    approved: boolean;
+}
 const RegexContext = createContext<IRegexContext | null>(null);
 
 export function RegexProvider({children}: {children: ReactNode}) {
-    const [regexPatterns, setRegexPatterns] = useState<string[]>([])
+    const [regexPatterns, setRegexPatterns] = useState<IRegexEntry[]>([])
     const [userText, setUserText] = useState<string>(lorem.generateParagraphs(7))
     const [regexInputValue, setRegexInputValue] = useState('')
 
@@ -39,7 +44,11 @@ export function RegexProvider({children}: {children: ReactNode}) {
 
         if(!regexInputValue) return
 
-        const updatedPatterns = [...regexPatterns, regexInputValue];
+        const entry = {
+            pattern: regexInputValue,
+            approved: false
+        }
+        const updatedPatterns = [...regexPatterns, entry];
 
         setRegexPatterns(updatedPatterns)
         setRegexInputValue('')
