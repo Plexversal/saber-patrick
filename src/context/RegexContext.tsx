@@ -17,6 +17,7 @@ export interface IRegexContext {
     regexInputValue: string;
     setRegexInputValue: Dispatch<SetStateAction<string>>;
     addRegex: (e: React.FormEvent<HTMLFormElement>) => void
+    deleteRegex: (e: number) => void
 }
 
 interface IRegexEntry {
@@ -56,6 +57,14 @@ export function RegexProvider({children}: {children: ReactNode}) {
         localStorage.setItem('regexPatterns', JSON.stringify(updatedPatterns))
     }
 
+    function deleteRegex(index: number) {
+        const updatedPatterns = [...regexPatterns];
+        updatedPatterns.splice(index, 1);
+
+        setRegexPatterns(updatedPatterns);
+        localStorage.setItem('regexPatterns', JSON.stringify(updatedPatterns));
+    }
+
     return (<RegexContext.Provider
     value={{
         regexPatterns,
@@ -64,7 +73,8 @@ export function RegexProvider({children}: {children: ReactNode}) {
         setUserText,
         regexInputValue,
         setRegexInputValue,
-        addRegex
+        addRegex,
+        deleteRegex
     }}>
         {children}
     </RegexContext.Provider>)

@@ -5,7 +5,7 @@ import { useRegexContext } from '@/context/RegexContext';
 
 export default function SidePanel() {
 
-    const {regexPatterns, setRegexPatterns, regexInputValue, setRegexInputValue, addRegex} = useRegexContext()
+    const {regexPatterns, setRegexPatterns, regexInputValue, setRegexInputValue, addRegex, deleteRegex} = useRegexContext()
 
 
     /* Initialize the local storage patterns */
@@ -33,7 +33,9 @@ export default function SidePanel() {
                 <h1>Current strings</h1>
                 <ul>
                     {regexPatterns.map((e, i) => (
-                        <li key={i}>{e.pattern} : {e.approved ? 'approved' : 'not approved'}</li>
+                        <li key={i}>{e.pattern} : {e.approved ? 'approved' : 'not approved'} 
+                        <button onClick={() => deleteRegex(i)}>Delete</button>
+                        </li>
                     ))}
                 </ul>
             </div>
