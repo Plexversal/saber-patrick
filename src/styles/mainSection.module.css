@@ -50,3 +50,22 @@
     background-color: bisque;
     padding: 1px 3px;
 }
+@media (max-width: 1560px) {
+.main-container{
+
+    flex-direction: column;
+
+}
+
+
+}
+@media (max-width: 600px) {
+  .main-container {
+    flex-direction: column;
+
+  }
+    .text-area,
+    .results-container {
+        width: 370px !important;
+    }
+}

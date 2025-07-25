@@ -83,7 +83,7 @@ export default function SidePanel() {
                     </div> : 
                     <div>
                         <form className={styles['regex-input-form']} onSubmit={(e) => addRegex(e)}>
-                            <input value={regexInputValue} onChange={e => onChange(e)} type='text' placeholder='Type your pattern'></input>
+                            <input value={regexInputValue} onChange={e => onChange(e)} type='text' placeholder='Pattern (dont include surrounding //gi tags)'></input>
                             <button type='submit'>Add Pattern</button>
                         </form>
                         <h2>Current Patterns</h2>

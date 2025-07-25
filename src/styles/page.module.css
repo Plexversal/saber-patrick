@@ -45,12 +45,18 @@
   .page {
     padding: 32px;
     padding-bottom: 80px;
+
   }
 
   .main {
     align-items: center;
   }
+.container {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
 
+}
 
   a.secondary {
     min-width: auto;
