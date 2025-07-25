@@ -22,7 +22,9 @@ export interface IRegexContext {
     approveRegex: (index: number, approvalStatus: boolean) => void;
     workerMatches: string[];
     setWorkerMatches: Dispatch<SetStateAction<string[]>>;
-    runExtraction: (pattern: string, text: string) => void
+    runExtraction: (pattern: string, text: string) => void;
+    currentSelectedIndex: number;
+    setCurrentSelectedIndex: Dispatch<SetStateAction<number>>
 }
 
 interface IRegexEntry {
@@ -36,6 +38,7 @@ export function RegexProvider({children}: {children: ReactNode}) {
     const [userText, setUserText] = useState<string>(lorem.generateParagraphs(7))
     const [regexInputValue, setRegexInputValue] = useState('')
     const [workerMatches, setWorkerMatches] = useState<string[]>([]);
+    const [currentSelectedIndex, setCurrentSelectedIndex] = useState<number>(0)
     const workerRef = useRef<Worker | null>(null);
 
     /* Initialize the local storage patterns and worker */
@@ -66,6 +69,11 @@ export function RegexProvider({children}: {children: ReactNode}) {
         };
 
     }, []);
+
+    useEffect(() => {
+        if(!regexPatterns || !regexPatterns[currentSelectedIndex]?.pattern || !userText) return;
+        runExtraction(regexPatterns[currentSelectedIndex].pattern, userText)
+    }, [userText, currentSelectedIndex, regexPatterns])
 
     function addRegex(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault()
@@ -138,7 +146,9 @@ export function RegexProvider({children}: {children: ReactNode}) {
         approveRegex,
         workerMatches,
         setWorkerMatches,
-        runExtraction
+        runExtraction,
+        currentSelectedIndex,
+        setCurrentSelectedIndex
     }}>
         {children}
     </RegexContext.Provider>)
