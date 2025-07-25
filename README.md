@@ -4,16 +4,17 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 
 ## Setup
 
-First, run the development server:
+Clone and run server:
 
 ```bash
+git clone https://github.com/Plexversal/saber-patrick.git
+cd saber-patrick
+npm install
+
+# If editing:
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+# If running:
+npm run build
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
