@@ -1,6 +1,10 @@
 :root {
   --background: #f1f1f1;
   --foreground: #171717;
+  --button-primary-hover: #383838;
+  --button-secondary-hover: #f2f2f2;
+  --header-border-color: rgb(221, 221, 221);
+
 }
 
 
@@ -27,6 +31,12 @@ body {
 a {
   color: inherit;
   text-decoration: none;
+}
+
+h2 {
+    border-bottom: 2px solid var(--header-border-color);
+    margin-bottom: 1em;
+    padding: 0.3em 0;
 }
 
 @media (prefers-color-scheme: dark) {
