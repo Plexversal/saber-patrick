@@ -6,11 +6,10 @@ import { FaCircleCheck, FaCircleXmark  } from "react-icons/fa6";
 
 export default function SidePanel() {
 
-    const {regexPatterns, setRegexPatterns, regexInputValue, setRegexInputValue, addRegex, deleteRegex, editRegex, approveRegex} = useRegexContext()
+    const {regexPatterns, setRegexPatterns, regexInputValue, setRegexInputValue, addRegex, deleteRegex, editRegex, approveRegex, runExtraction, workerMatches, userText, currentSelectedIndex, setCurrentSelectedIndex} = useRegexContext()
     const [editing, setEditing] = useState<number | null>(null)
     const [newPattern, setNewPattern] = useState<string>('')
     const [approveModeChosen, setApproveModeChosen] = useState<boolean>(true)
-    const [approvalSelectedPattern, setApprovalSelectedPattern] = useState<number>(0)
     /* Initialize the local storage patterns */
     useEffect(() => {
         let regexPatterns = localStorage.getItem("regexPatterns")
@@ -24,6 +23,10 @@ export default function SidePanel() {
         setRegexInputValue(e.target.value)
     }
 
+    useEffect(() => {
+        console.log(workerMatches)
+    }, [workerMatches])
+
     return (
         <div>
             <button onClick={() => approveModeChosen ? setApproveModeChosen(false) : setApproveModeChosen(true)}>Toggle Mode</button>
@@ -36,8 +39,8 @@ export default function SidePanel() {
                         <label htmlFor="regexSelect">Select a pattern:</label>
                             <select
                                 id="regexSelect"
-                                value={approvalSelectedPattern}
-                                onChange={(e) => setApprovalSelectedPattern(parseInt(e.target.value))}
+                                value={currentSelectedIndex}
+                                onChange={(e) => setCurrentSelectedIndex(parseInt(e.target.value))}
                                 >
                                 {regexPatterns.map((e, i) => (
                                     <option key={i} value={i}>
@@ -45,22 +48,24 @@ export default function SidePanel() {
                                     </option>
                                 ))}
                             </select>
-                            {regexPatterns[approvalSelectedPattern] && (
+                            {regexPatterns[currentSelectedIndex] && (
                             <div>
                                 <h2>Status</h2>
-                                {regexPatterns[approvalSelectedPattern].approved ? (
+                                {regexPatterns[currentSelectedIndex].approved ? (
                                 <div>
                                     <div>Approved</div>
-                                    <button onClick={() => approveRegex(approvalSelectedPattern, false)}>Unapprove</button>
+                                    <button onClick={() => approveRegex(currentSelectedIndex, false)}>Unapprove</button>
                                 </div>
 
                                 ) : (
                                 <div>
                                     <div>Not Approved</div>
-                                    <button onClick={() => approveRegex(approvalSelectedPattern, true)}>Approve</button>
+                                    <button onClick={() => approveRegex(currentSelectedIndex, true)}>Approve</button>
                                 </div>
 
                                 )}
+                                <h3>extract</h3>
+                                <button onClick={() => runExtraction(regexPatterns[currentSelectedIndex].pattern, userText)}>extract</button>
                             </div>
                             )}                            
                     </div> : 

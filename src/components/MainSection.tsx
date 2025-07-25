@@ -19,11 +19,25 @@ const lorem = new LoremIpsum({
 
 export default function MainSection() {
 
-    const {userText, setUserText} = useRegexContext()
+    const {userText, setUserText, workerMatches} = useRegexContext()
 
     const inputOnChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
         setUserText(e.target.value);
     };
+
+    function countInstances(matches: string[]) {
+        if(matches.length == 0) return;
+        if(matches.includes('No matches found')) return <div>No matches found</div>;
+        let count: Record<string, number> = matches.reduce((cnt: any, cur) => (cnt[cur] = cnt[cur] + 1 || 1, cnt), {});
+        console.log(count)
+        return <div>
+            {
+                Object.entries(count).map(([key, val]) => (
+                <div key={key}>Matched term: <span>{key}</span> has <span>{val}</span> matches</div>
+                ))
+            }
+        </div>
+    }
 
     return (
         <div className={styles['main-container']}>
@@ -33,6 +47,7 @@ export default function MainSection() {
                 value={userText}/>
                 
             <button onClick={() => setUserText(lorem.generateParagraphs(7))}>Generate Text</button>
+            {countInstances(workerMatches)}
         </div>
     )
 }
