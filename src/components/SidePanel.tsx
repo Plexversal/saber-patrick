@@ -2,11 +2,24 @@
 
 import React, { useState, useEffect } from 'react';
 import { useRegexContext } from '@/context/RegexContext';
-import { FaCircleCheck, FaCircleXmark  } from "react-icons/fa6";
+import { FaCircleCheck, FaCircleXmark, FaTrash, FaPen } from "react-icons/fa6";
+import { FiSave } from "react-icons/fi";
+import styles from '@/styles/sidePanel.module.css'
 
 export default function SidePanel() {
 
-    const {regexPatterns, setRegexPatterns, regexInputValue, setRegexInputValue, addRegex, deleteRegex, editRegex, approveRegex, runExtraction, workerMatches, userText, currentSelectedIndex, setCurrentSelectedIndex} = useRegexContext()
+    const {
+        regexPatterns, 
+        setRegexPatterns, 
+        regexInputValue, 
+        setRegexInputValue, 
+        addRegex, 
+        deleteRegex, 
+        editRegex, 
+        approveRegex, 
+        workerMatches, 
+        currentSelectedIndex, 
+        setCurrentSelectedIndex } = useRegexContext()
     const [editing, setEditing] = useState<number | null>(null)
     const [newPattern, setNewPattern] = useState<string>('')
     const [approveModeChosen, setApproveModeChosen] = useState<boolean>(true)
@@ -28,15 +41,18 @@ export default function SidePanel() {
     }, [workerMatches])
 
     return (
-        <div>
-            <button onClick={() => approveModeChosen ? setApproveModeChosen(false) : setApproveModeChosen(true)}>Toggle Mode</button>
+        <div className={styles['side-panel-container']}>
+            <h2>Patricks Masterpiece ©</h2>
+            <div className={styles['mode-wrapper']}>
+                <h3>{approveModeChosen ? 'Approve mode' : 'Edit mode'}</h3>
+                <button onClick={() => approveModeChosen ? setApproveModeChosen(false) : setApproveModeChosen(true)}>Change Mode</button>
+            </div>
             
             <div>
-                <p>{approveModeChosen ? 'Approve mode' : 'Edit mode'}</p>
                 {
                     approveModeChosen ? 
-                    <div>
-                        <label htmlFor="regexSelect">Select a pattern:</label>
+                    <div className={styles['select-pattern-wrapper']}>
+                        <label htmlFor="regexSelect">Select a pattern</label>
                             <select
                                 id="regexSelect"
                                 value={currentSelectedIndex}
@@ -50,44 +66,45 @@ export default function SidePanel() {
                             </select>
                             {regexPatterns[currentSelectedIndex] && (
                             <div>
-                                <h2>Status</h2>
                                 {regexPatterns[currentSelectedIndex].approved ? (
-                                <div>
-                                    <div>Approved</div>
-                                    <button onClick={() => approveRegex(currentSelectedIndex, false)}>Unapprove</button>
-                                </div>
+                                
+                                    <button className={styles['unapprove-btn']} onClick={() => approveRegex(currentSelectedIndex, false)}>Unapprove</button>
+                                
 
                                 ) : (
-                                <div>
-                                    <div>Not Approved</div>
-                                    <button onClick={() => approveRegex(currentSelectedIndex, true)}>Approve</button>
-                                </div>
+                                
+                                
+                                    <button className={styles['approve-btn']} onClick={() => approveRegex(currentSelectedIndex, true)}>Approve</button>
+                                
 
                                 )}
-                                <h3>extract</h3>
-                                <button onClick={() => runExtraction(regexPatterns[currentSelectedIndex].pattern, userText)}>extract</button>
                             </div>
                             )}                            
                     </div> : 
                     <div>
-                        <form onSubmit={(e) => addRegex(e)}>
+                        <form className={styles['regex-input-form']} onSubmit={(e) => addRegex(e)}>
+                            <input value={regexInputValue} onChange={e => onChange(e)} type='text' placeholder='Pattern (dont include surrounding //gi tags)'></input>
                             <button type='submit'>Add Pattern</button>
-                            <input value={regexInputValue} onChange={e => onChange(e)} type='text' placeholder='Type your pattern'></input>
                         </form>
-                        <h1>Current Patterns</h1>
-                        <ul>
+                        <h2>Current Patterns</h2>
+                        <ul className={styles['pattern-list']}>
                             {regexPatterns.map((e, i) => (
-                                <li key={i}>
-                                    {e.approved ? < FaCircleCheck /> : <FaCircleXmark />}
+                                <li  key={i}>
+                                    <span className={styles['code-content-wrapper']}>
+                                        {e.approved ? < FaCircleCheck /> : <FaCircleXmark />}
                                     {
                                         editing === i ? <input value={newPattern} onChange={e => setNewPattern(e.target.value)}></input> :
-                                        <code>{e.pattern}</code>
+                                        <code><span>/</span>{e.pattern}<span>/gi</span></code>
                                     }
-                                    <button onClick={() => deleteRegex(i)}>Delete</button>
+                                    </span>
+                                    <span>
+                                        {editing !== i ? 
+                                    <button className={styles['edit-btn']} onClick={() => {setEditing(i); setNewPattern(e.pattern)}}><FaPen size={25} /></button> : 
+                                    <button className={styles['save-btn']} onClick={() => {setEditing(null); editRegex(i, newPattern)}}><FiSave size={25}/></button>}
+                                    <button className={styles['delete-btn']} onClick={() => deleteRegex(i)}><FaTrash size={25}/></button>
+                                    </span>
                                     
-                                    {editing !== i ? 
-                                    <button onClick={() => {setEditing(i); setNewPattern(e.pattern)}}>edit</button> : 
-                                    <button onClick={() => {setEditing(null); editRegex(i, newPattern)}}>save</button>}
+
 
                                 </li>
                             ))}

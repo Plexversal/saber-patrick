@@ -110,6 +110,7 @@ export function RegexProvider({children}: {children: ReactNode}) {
         updatedPatterns[index] = updatedEntry;
 
         setRegexPatterns(updatedPatterns);
+        setCurrentSelectedIndex(index)
         localStorage.setItem('regexPatterns', JSON.stringify(updatedPatterns));
     }
 

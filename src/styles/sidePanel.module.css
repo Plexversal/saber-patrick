@@ -1,0 +1,184 @@
+.side-panel-container {
+    min-width: 500px;
+    height: 100svh;
+    border-right: 2px solid rgb(221, 221, 221);
+    margin-right: 1em;
+    display: flex;
+    flex-direction: column;
+    padding: 3em;
+}
+
+.mode-wrapper { 
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 2em;
+    align-items: center;
+
+}
+
+.mode-wrapper button,
+.regex-input-form button {
+    padding: 0.5em;
+    cursor: pointer;
+    border: 2px solid rgb(116, 147, 233);
+    border-radius: 4px;
+    background: none;
+    color: rgb(72, 93, 151);
+    transition: all .15s;
+    min-width: 100px;
+}
+
+.mode-wrapper button:hover,
+.regex-input-form button:hover {
+    border: 2px solid rgb(116, 147, 233);
+    background: rgb(116, 147, 233);
+    color: white
+
+}
+
+.select-pattern-wrapper {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: 0.5em;
+}
+.select-pattern-wrapper label {
+    font-weight: 600;
+}
+
+.select-pattern-wrapper select {
+    padding: 0.5em;
+    font-size: 1em;
+    cursor: pointer;
+}
+
+/* default is approve styles */
+.select-pattern-wrapper button {
+    padding: 0.5em;
+    cursor: pointer;
+    border: 2px solid rgb(116, 147, 233);
+    border-radius: 4px;
+    background: none;
+    color: rgb(72, 93, 151);
+    transition: all .15s;
+}
+.select-pattern-wrapper button:hover {
+    border: 2px solid rgb(116, 147, 233);
+    background: rgb(116, 147, 233);
+    color: white !important
+
+}
+.unapprove-btn {
+    border: 2px solid rgb(221, 57, 84) !important;
+    color: rgb(221, 57, 84) !important;
+}
+.unapprove-btn:hover {
+    border: 2px solid rgb(221, 57, 84) !important;
+    color: white !important;
+    background: rgb(221, 57, 84) !important;
+
+}
+.pattern-list button {
+    background: none;
+    outline: none;
+    border: none;
+    cursor: pointer;
+}
+
+.delete-btn {
+    color: rgb(221, 57, 84);
+}
+
+.delete-btn:hover {
+    color: rgb(126, 7, 27);
+}
+
+
+.edit-btn {
+    color: rgb(250, 167, 72);
+}
+
+.edit-btn:hover {
+    color: rgb(150, 87, 16);
+}
+
+.save-btn {
+    color: rgb(116, 147, 233);
+}
+
+.save-btn:hover {
+    color: rgb(37, 69, 158);
+}
+
+.pattern-list {
+    list-style: none;
+    width: 100%;
+    
+
+}
+
+.pattern-list span {
+    white-space: nowrap;
+}
+
+.pattern-list li {
+    width: 100%;
+    font-size: 1.2em;
+    display: flex;
+    justify-content: space-between;
+    gap: 1em;
+    margin: 0.4em 0;
+}
+
+.code-content-wrapper {
+    overflow-x: auto;
+    width: 100%;
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    gap: 0.3em;
+
+}
+.code-content-wrapper code span {
+    color: blueviolet;
+}
+.regex-input-form {
+    display: flex;
+    justify-content: space-between;
+    gap: 1em;
+    margin-bottom: 2em;
+
+}
+
+.regex-input-form input[type='text']{
+    padding: 3px;
+    border-radius: 2px;
+    border: none;
+    width: 100%;
+}
+
+.pattern-list input {
+    min-width: 100%;
+    padding: 12px;
+    background: none;
+    color: var(--foreground);
+    outline: none;
+    border: none;
+
+
+}
+
+@media (max-width: 1000px) {
+.side-panel-container {
+    min-width: 300px;
+}
+}
+
+@media (max-width: 600px) {
+.side-panel-container {
+    height: fit-content;
+    min-width: 100%;
+}
+
+
+}

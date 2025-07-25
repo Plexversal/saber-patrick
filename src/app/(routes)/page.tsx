@@ -9,10 +9,9 @@ export default function Home() {
     <RegexProvider>
       <div className={styles.page}>
         <main className={styles.main}>
-          <div>
-            <MainSection />
-            <br></br>
+          <div className={styles['container']}>
             <SidePanel />
+            <MainSection />
           </div>
         </main>
       </div>
